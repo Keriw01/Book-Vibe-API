@@ -43,6 +43,8 @@ W VS Code możesz uruchomić projekt na kilka sposobów:
 - **Z terminalu**: W folderze projektu wpisz:
   ```bash
   mvn spring-boot:run
+
+  mvn clean install -DskipTests
   ```
 - **Z poziomu kodu**: 
   1. Otwórz plik główny aplikacji (np. `src/main/java/com/example/demo/DemoApplication.java`).
