@@ -1,18 +1,10 @@
 package com.example.bookvibeapi.responses;
 
+import com.example.bookvibeapi.models.User;
+
 public class LoginResponse {
-    private String token;
-
     private long expiresIn;
-
-    public String getToken() {
-        return token;
-    }
-
-    public LoginResponse setToken(String token) {
-        this.token = token;
-        return this;
-    }
+    private User user;
 
     public long getExpiresIn() {
         return expiresIn;
@@ -23,11 +15,20 @@ public class LoginResponse {
         return this;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public LoginResponse setUser(User user) {
+        this.user = user;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "LoginResponse{" +
-                "token='" + token + '\'' +
                 ", expiresIn=" + expiresIn +
+                ", user=" + user +
                 '}';
     }
 }

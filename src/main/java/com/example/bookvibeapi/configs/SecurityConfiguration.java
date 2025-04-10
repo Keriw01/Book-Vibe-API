@@ -37,16 +37,25 @@ public class SecurityConfiguration {
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName(null);
 
+        CookieCsrfTokenRepository csrfTokenRepository = new CookieCsrfTokenRepository();
+
+        csrfTokenRepository.setCookieName("XSRF-TOKEN");
+        csrfTokenRepository.setCookieCustomizer(cookieBuilder -> {
+                cookieBuilder   
+                    .maxAge(3600)               
+                    .secure(false) // TODO: do zmienienia na true jeżeli połączenie przez HTTPS             
+                    .sameSite("Strict")        
+                    .httpOnly(true);            
+            });
+
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(csrfTokenRepository)
                         .csrfTokenRequestHandler(requestHandler)
                 ).authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/**", "/error")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
+                        .requestMatchers("/auth/**", "/error").permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -63,7 +72,7 @@ public class SecurityConfiguration {
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-XSRF-TOKEN")); 
-        configuration.setExposedHeaders(List.of("X-XSRF-TOKEN"));
+        // configuration.setExposedHeaders(List.of("X-XSRF-TOKEN"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
