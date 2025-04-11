@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.annotations.TimeZoneColumn;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -33,6 +35,9 @@ public class Book {
     
     @Column(nullable = true)
     private String description;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CollectionBook> collections = new HashSet<>();
 
     // Constructors
     public Book() {}
