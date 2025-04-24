@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                     .maxAge(3600)               
                     .secure(false) // TODO: PRODUCTION - do zmienienia na true jeżeli połączenie przez HTTPS             
                     .sameSite("Strict")        
-                    .httpOnly(true);            
+                    .httpOnly(false);            
             });
 
             // TODO: PRODUCTION - dokonać przeglądu i tej polityki.

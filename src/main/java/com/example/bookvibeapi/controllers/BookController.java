@@ -1,5 +1,8 @@
 package com.example.bookvibeapi.controllers;
 
+import com.example.bookvibeapi.dtos.BookDTO;
+import com.example.bookvibeapi.dtos.CollectionDTO;
+import com.example.bookvibeapi.mapper.BookMapper;
 import com.example.bookvibeapi.models.Book;
 import com.example.bookvibeapi.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,20 +10,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
     private final BookService bookService;
+    private final BookMapper bookMapper;
 
     @Autowired
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, BookMapper bookMapper) {
         this.bookService = bookService;
+        this.bookMapper = bookMapper;
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public List<BookDTO> getAllBooks() {
+        Set<Book> books = bookService.getAllBooks();
+        return books.stream()
+                .map(bookMapper::toBookDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -44,4 +54,3 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 }
-

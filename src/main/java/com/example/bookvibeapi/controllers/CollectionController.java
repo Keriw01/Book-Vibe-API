@@ -1,6 +1,7 @@
 package com.example.bookvibeapi.controllers;
 
 import com.example.bookvibeapi.models.Collection;
+import com.example.bookvibeapi.dtos.BookDTO;
 import com.example.bookvibeapi.dtos.CollectionDTO;
 import com.example.bookvibeapi.mapper.BookMapper;
 import com.example.bookvibeapi.services.CollectionService;
@@ -30,6 +31,20 @@ public class CollectionController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/{id}/books")
+    public ResponseEntity<List<BookDTO>> getBooksInCollection(@PathVariable Long id) {
+        Collection collection = collectionService.getCollectionById(id);
+
+        List<BookDTO> bookDtos = collection.getBooks().stream()
+
+                .map(collectionBook -> collectionBook.getBook())
+
+                .map(bookMapper::toBookDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(bookDtos);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<CollectionDTO> getCollectionById(@PathVariable Long id) {
         Collection collection = collectionService.getCollectionById(id);
@@ -43,7 +58,8 @@ public class CollectionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CollectionDTO> updateCollection(@PathVariable Long id, @RequestBody Collection collectionDetails) {
+    public ResponseEntity<CollectionDTO> updateCollection(@PathVariable Long id,
+            @RequestBody Collection collectionDetails) {
         Collection updatedCollection = collectionService.updateCollection(id, collectionDetails);
         return ResponseEntity.ok(bookMapper.toCollectionDTO(updatedCollection));
     }

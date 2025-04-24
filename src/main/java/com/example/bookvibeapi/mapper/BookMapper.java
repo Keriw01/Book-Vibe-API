@@ -8,16 +8,24 @@ import com.example.bookvibeapi.dtos.CollectionDTO;
 import com.example.bookvibeapi.models.Book;
 import com.example.bookvibeapi.models.Collection;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class BookMapper {
 
     public BookDTO toBookDTO(Book book) {
+        Set<Long> collIds = book.getCollections().stream() 
+        .map(collectionBook -> collectionBook.getCollection().getId())
+        .collect(Collectors.toSet()); 
+
         return BookDTO.builder()
                 .id(book.getId())
                 .title(book.getTitle())
                 .author(book.getAuthor())
+                .releaseDate(book.getReleaseDate() != null ? book.getReleaseDate().toString() : null)
+                .description(book.getDescription())
+                .collectionIds(collIds)
                 .build();
     }
 
@@ -25,12 +33,6 @@ public class BookMapper {
         CollectionDTO dto = new CollectionDTO();
         dto.setId(collection.getId());
         dto.setName(collection.getName());
-
-        if (collection.getBooks() != null) {
-            dto.setBooks(collection.getBooks().stream()
-                    .map(collectionBook -> toBookDTO(collectionBook.getBook()))
-                    .collect(Collectors.toList()));
-        }
 
         return dto;
     }
