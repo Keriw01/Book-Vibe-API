@@ -7,6 +7,7 @@ import com.example.bookvibeapi.mapper.BookMapper;
 import com.example.bookvibeapi.services.CollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,12 +53,14 @@ public class CollectionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<CollectionDTO> addCollection(@RequestBody Collection collection) {
         Collection savedCollection = collectionService.addCollection(collection);
         return ResponseEntity.ok(bookMapper.toCollectionDTO(savedCollection));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<CollectionDTO> updateCollection(@PathVariable Long id,
             @RequestBody Collection collectionDetails) {
         Collection updatedCollection = collectionService.updateCollection(id, collectionDetails);
@@ -65,6 +68,7 @@ public class CollectionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Void> deleteCollection(@PathVariable Long id) {
         collectionService.deleteCollection(id);
         return ResponseEntity.noContent().build();

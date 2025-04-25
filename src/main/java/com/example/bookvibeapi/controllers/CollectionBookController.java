@@ -6,6 +6,7 @@ import com.example.bookvibeapi.models.CollectionBook;
 import com.example.bookvibeapi.services.CollectionBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,6 +23,7 @@ public class CollectionBookController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<CollectionDTO> addBookToCollection(
             @RequestParam Long bookId,
             @RequestParam Long collectionId) {
@@ -30,6 +32,7 @@ public class CollectionBookController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Void> removeBookFromCollection(
             @RequestParam Long bookId,
             @RequestParam Long collectionId) {

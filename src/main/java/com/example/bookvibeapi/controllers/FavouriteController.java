@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class FavouriteController {
     private final FavouriteService favouriteService;
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<FavouriteDTO> addToFavourites(
             @RequestParam Long bookId,
             @RequestParam Integer userId) {
@@ -30,6 +32,7 @@ public class FavouriteController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> removeFromFavourites(
             @RequestParam Long bookId,
             @RequestParam Integer userId) {
@@ -42,6 +45,7 @@ public class FavouriteController {
     }
 
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<FavouriteDTO>> getUserFavourites(@PathVariable Integer userId) {
         try {
             List<FavouriteDTO> favouriteDtos = favouriteService.getUserFavouritesDTO(userId);

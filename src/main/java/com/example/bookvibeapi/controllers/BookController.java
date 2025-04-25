@@ -7,6 +7,7 @@ import com.example.bookvibeapi.models.Book;
 import com.example.bookvibeapi.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class BookController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('MODERATOR')")
     public List<BookDTO> getAllBooks() {
         Set<Book> books = bookService.getAllBooks();
         return books.stream()
@@ -39,16 +41,19 @@ public class BookController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.addBook(book));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book bookDetails) {
         return ResponseEntity.ok(bookService.updateBook(id, bookDetails));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
