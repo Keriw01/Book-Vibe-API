@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import com.example.bookvibeapi.models.User;
 import com.example.bookvibeapi.repositories.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,5 +23,9 @@ public class UserService {
         userRepository.findAll().forEach(users::add);
 
         return users;
+    }
+        public User getUserById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
     }
 }
